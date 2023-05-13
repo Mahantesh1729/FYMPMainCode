@@ -22,22 +22,22 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # on the terminal type: curl http://127.0.0.1:5000/
 # returns hello world when we use GET.
 # returns the data that we send when we use POST.
-@app.route('/', methods = ['GET', 'POST'])
-def home():
-	if(request.method == 'GET'):
+# @app.route('/', methods = ['GET', 'POST'])
+# def home():
+# 	if(request.method == 'GET'):
 
-		data = "hello world"
-		return jsonify({'data': data})
+# 		data = "hello world"
+# 		return jsonify({'data': data})
 
 
 # A simple function to calculate the square of a number
 # the number to be squared is sent in the URL when we use GET
 # on the terminal type: curl http://127.0.0.1:5000 / home / 10
 # this returns 100 (square of 10)
-@app.route('/home/<int:num>', methods = ['GET'])
-def disp(num):
+# @app.route('/home/<int:num>', methods = ['GET'])
+# def disp(num):
 
-	return jsonify({'data': num**2})
+# 	return jsonify({'data': num**2})
 
 
 @app.route('/input/image', methods = ['POST'])
@@ -45,14 +45,16 @@ def disp(num):
 def getImage():
 	
 	if 'file1' not in request.files:
-		return 'there is no file1 in form!'
+		return 'there is no sketch1 in form!'
 	
 	if 'file2' not in request.files:
-		return 'there is no file2 in form!'
+		return 'there is no sketch2 in form!'
+
+	
 	file1 = request.files['file1']
 	file2 = request.files['file2']
-	duration = int(request.form['duration'])
-	frameRate = int(request.form['frameRate'])
+	# duration = int(request.form['duration'])
+	# frameRate = int(request.form['frameRate'])
 	path = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
 	file1.save(path)
 	# path='images/aligned_images/jennie.png'
@@ -63,7 +65,7 @@ def getImage():
 	# path = 'images/aligned_images/rih.png'
 	print(path)
 	image2 = cv2.imread(path)
-	doMorphing(image1, image2,duration,frameRate,'output.mp4')
+	doMorphing(image1, image2, 20,10,'output.mp4')
 	path='/home/mahantesh/Mahantesh/notes/sem8/MainCode/output.mp4'
 
 	cap = cv2.VideoCapture(path)
@@ -72,7 +74,13 @@ def getImage():
 
 	middle_frame = total_frames // 2
 
-	cap.set(cv2.CAP_PROP_POS_FRAMES, middle_frame)
+	req_frame = int(float(request.form['interstitialCloseness']) * total_frames)
+
+	if req_frame == 0 : req_frame = 1
+
+	if req_frame == total_frames: req_frame = req_frame - 1
+
+	cap.set(cv2.CAP_PROP_POS_FRAMES, req_frame)
 
 	ret, frame = cap.read()
 
