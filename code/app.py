@@ -50,45 +50,80 @@ def getImage():
 	if 'file2' not in request.files:
 		return 'there is no sketch2 in form!'
 
-	
-	file1 = request.files['file1']
-	file2 = request.files['file2']
-	# duration = int(request.form['duration'])
-	# frameRate = int(request.form['frameRate'])
-	path = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
-	file1.save(path)
-	# path='images/aligned_images/jennie.png'
-	image1 = cv2.imread(path)
-	print(path)
-	path = os.path.join(app.config['UPLOAD_FOLDER'], file2.filename)
-	file2.save(path)
-	# path = 'images/aligned_images/rih.png'
-	print(path)
-	image2 = cv2.imread(path)
-	doMorphing(image1, image2, 20,10,'output.mp4')
-	path='/home/mahantesh/Mahantesh/notes/sem8/MainCode/output.mp4'
+	files = request.files
+	flag = 0
+	confResult = 0
+	path = 0
+	resultPath = 0
+	file1 = 0
+	file2 = 0	
+	for i in range(2, len(files) + 1):
+		
+		if not flag:
+			print("in first flag")
+			file1 = request.files['file' + str(i - 1)]
+		file2 = request.files['file' + str(i)]
 
-	cap = cv2.VideoCapture(path)
+		# duration = int(request.form['duration'])
+		# frameRate = int(request.form['frameRate'])
+		print(file1)
+		if not flag:
+			path = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
+			file1.save(path)
+		else:
+			path = resultPath
+		# path='images/aligned_images/jennie.png'
+		image1 = cv2.imread(path)
+		print(path)
+		path = os.path.join(app.config['UPLOAD_FOLDER'], file2.filename)
+		file2.save(path)
+		# path = 'images/aligned_images/rih.png'
+		print(path)
+		image2 = cv2.imread(path)
+		doMorphing(image1, image2, 20,10,'output.mp4')
+		path='/home/mahantesh/Mahantesh/notes/sem8/MainCode/output.mp4'
 
-	total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+		cap = cv2.VideoCapture(path)
 
-	middle_frame = total_frames // 2
+		total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
-	req_frame = int(float(request.form['interstitialCloseness']) * total_frames)
+		print("total_frames= ", total_frames)
 
-	if req_frame == 0 : req_frame = 1
+		confd1 = 0
+		confd2 = 0
 
-	if req_frame == total_frames: req_frame = req_frame - 1
+		if not flag:
+			confd1 = float(request.form['conf' + str(i - 1)])
+			flag = 1
+		else:
+			confd1 = confResult
+		
 
-	cap.set(cv2.CAP_PROP_POS_FRAMES, req_frame)
+		confd2 = float(request.form['conf' + str(i)])
 
-	ret, frame = cap.read()
+		print("conf1= ", confd1, "conf2= ", confd2)
 
-	cv2.imwrite('/home/mahantesh/Mahantesh/notes/sem8/MainCode/middle_frame.jpg', frame)
+		confResult = confd1 / (confd1 + confd2)
 
-	path = '/home/mahantesh/Mahantesh/notes/sem8/MainCode/middle_frame.jpg'
+		print("confResult= ", confResult)
 
-	cap.release()
+		req_frame = int(confResult * total_frames)
+
+		print("req_frame= ", req_frame)
+
+		if req_frame == 0 : req_frame = 1
+
+		if req_frame == total_frames: req_frame = req_frame - 1
+
+		cap.set(cv2.CAP_PROP_POS_FRAMES, req_frame)
+
+		ret, frame = cap.read()
+		print(ret)
+		cv2.imwrite('/home/mahantesh/Mahantesh/notes/sem8/MainCode/middle_frame.jpg', frame)
+
+		path = '/home/mahantesh/Mahantesh/notes/sem8/MainCode/middle_frame.jpg'
+		resultPath = path
+		cap.release()
 
 	return send_file(path, as_attachment=True)
 
