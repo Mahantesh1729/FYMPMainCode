@@ -22,6 +22,7 @@ def calculate_margin_help(img1,img2):
     return [size1,size2,diff0,diff1,avg0,avg1]
 
 def crop_image(img1,img2):
+    print("in crop_image img1 is", type(img1))
     [size1,size2,diff0,diff1,avg0,avg1] = calculate_margin_help(img1,img2)
 
     if(size1[0] == size2[0] and size1[1] == size2[1]):
