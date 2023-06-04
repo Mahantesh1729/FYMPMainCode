@@ -46,7 +46,8 @@ def home():
 @app.route('/input/image', methods = ['POST'])
 
 def getImage():
-	
+	current_folder = os.path.abspath(os.getcwd())
+	print(current_folder)
 	if 'file1' not in request.files:
 		return 'there is no sketch1 in form!'
 	
@@ -85,7 +86,7 @@ def getImage():
 		print(path)
 		image2 = cv2.imread(path)
 		doMorphing(image1, image2, 20,10,'output.mp4')
-		path='/home/mahantesh/Mahantesh/notes/sem8/MajorPWP2/MainCode/output.mp4'
+		path=current_folder+'/output.mp4'
 
 		cap = cv2.VideoCapture(path)
 
@@ -122,9 +123,9 @@ def getImage():
 
 		ret, frame = cap.read()
 		print(ret)
-		cv2.imwrite('/home/mahantesh/Mahantesh/notes/sem8/MajorPWP2/MainCode/middle_frame.jpg', frame)
+		cv2.imwrite(current_folder + 'middle_frame.jpg', frame)
 
-		path = '/home/mahantesh/Mahantesh/notes/sem8/MajorPWP2/MainCode/middle_frame.jpg'
+		path = current_folder + 'middle_frame.jpg'
 		resultPath = path
 		cap.release()
 
