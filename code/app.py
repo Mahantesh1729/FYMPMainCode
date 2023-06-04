@@ -24,11 +24,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # returns hello world when we use GET.
 # returns the data that we send when we use POST.
 # @app.route('/', methods = ['GET', 'POST'])
-# def home():
-# 	if(request.method == 'GET'):
+def home():
+	if(request.method == 'GET'):
 
-# 		data = "hello world"
-# 		return jsonify({'data': data})
+		data = "hello world"
+		return jsonify({'data': data})
 
 
 # A simple function to calculate the square of a number
@@ -39,6 +39,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # def disp(num):
 
 # 	return jsonify({'data': num**2})
+
+# @app.route('/', methods=['GET'])
 
 
 @app.route('/input/image', methods = ['POST'])
@@ -171,4 +173,4 @@ if __name__ == '__main__':
 
 	cors = CORS(app)
 	app.config['CORS_HEADERS'] = 'Content-Type'
-	app.run(debug = True)
+	app.run(debug = True, host='0.0.0.0')
