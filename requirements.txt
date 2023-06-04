@@ -12,5 +12,5 @@ Pillow==9.2.0
 pyparsing==3.0.9
 PyWavelets==1.4.0
 scikit-image==0.19.3
-scipy==1.9.1
+scipy==1.7.3
 tifffile==2022.8.12
