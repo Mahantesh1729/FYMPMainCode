@@ -1,4 +1,3 @@
-pip==23.1.2
 dlib @ git+https://github.com/davisking/dlib.git@dd1ec1fcff9479b00b233755aa673c028004d96d
 ffmpeg==1.4
 ffmpeg-python==0.2.0
