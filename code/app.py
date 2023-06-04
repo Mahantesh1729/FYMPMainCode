@@ -13,13 +13,11 @@ import os
 import cv2
 
 UPLOAD_FOLDER = 'code/upload_folder'
-OUTPUT_FOLDER = 'output'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['OUTPUT_FOLDER'] = OUTPUT_FOLDER
 
 # on the terminal type: curl http://127.0.0.1:5000/
 # returns hello world when we use GET.
@@ -83,11 +81,8 @@ def getImage():
 		# path = 'images/aligned_images/rih.png'
 		print(path)
 		image2 = cv2.imread(path)
-
-		path=os.path.join(app.config['OUTPUT_FOLDER'], "output.mp4")
-
-		doMorphing(image1, image2, 20,10,path)
-
+		doMorphing(image1, image2, 20,10,'output.mp4')
+		path='/home/mahantesh/Mahantesh/notes/sem8/MajorPWP2/MainCode/output.mp4'
 
 		cap = cv2.VideoCapture(path)
 
@@ -124,12 +119,9 @@ def getImage():
 
 		ret, frame = cap.read()
 		print(ret)
+		cv2.imwrite('/home/mahantesh/Mahantesh/notes/sem8/MajorPWP2/MainCode/middle_frame.jpg', frame)
 
-		path=os.path.join(app.config['OUTPUT_FOLDER'], "middle_frame.jpg")
-
-
-		cv2.imwrite(path, frame)
-
+		path = '/home/mahantesh/Mahantesh/notes/sem8/MajorPWP2/MainCode/middle_frame.jpg'
 		resultPath = path
 		cap.release()
 
