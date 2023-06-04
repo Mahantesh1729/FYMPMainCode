@@ -4,6 +4,7 @@ from face_morph import generate_morph_sequence
 from flask import Flask, jsonify, request
 from flask import send_file
 from werkzeug.utils import secure_filename
+from flask_cors import CORS, cross_origin
 
 
 import subprocess
@@ -168,4 +169,6 @@ def perform():
 #driver function
 if __name__ == '__main__':
 
+	cors = CORS(app)
+	app.config['CORS_HEADERS'] = 'Content-Type'
 	app.run(debug = True)
